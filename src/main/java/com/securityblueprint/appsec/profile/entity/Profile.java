@@ -6,7 +6,7 @@ import java.time.Instant;
 
 @Entity
 @Table(
-        name = "profile",
+        name = "profiles",
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "uk_profiles_keycloak_subject",

@@ -1,6 +1,7 @@
 package com.securityblueprint.appsec.profile.service;
 
 import com.securityblueprint.appsec.identity.service.CurrentUserService;
+import com.securityblueprint.appsec.profile.dto.UpdateProfileRequest;
 import com.securityblueprint.appsec.profile.entity.Profile;
 import com.securityblueprint.appsec.profile.repository.ProfileRepository;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,23 @@ public class ProfileService {
 
     @Transactional
     public Profile getMyProfile() {
-        String currentUserId = currentUserService.getCurrentUserId();
+        return getOrCreateMyProfile();
+    }
+
+    @Transactional
+    public Profile updateMyProfile(UpdateProfileRequest request) {
+        Profile profile = getOrCreateMyProfile();
+
+        profile.updateProfile(
+                request.displayName(),
+                request.bio()
+        );
+        return profileRepository.save(profile);
+    }
+
+    @Transactional
+    public Profile getOrCreateMyProfile() {
+        var currentUserId = currentUserService.getCurrentUserId();
 
         return profileRepository
                 .findByKeycloakSubject(currentUserId)
